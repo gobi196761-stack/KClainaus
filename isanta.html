@@ -12,7 +12,7 @@
         .section { background: white; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         h1, h2 { color: #2c3e50; }
         .input-group { margin-bottom: 15px; }
-        label { display: block; margin: 10px 0; cursor: pointer; }
+        label { display: block; margin: 10px 0; cursor: pointer; padding: 5px; border-bottom: 1px solid #eee; }
         input[type="text"], input[type="email"] { width: 100%; padding: 12px; margin: 5px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 16px; }
         button { background: #27ae60; color: white; border: none; padding: 15px; width: 100%; font-size: 1.1em; cursor: pointer; border-radius: 5px; margin-top: 10px; }
         button:hover { background: #219150; }
@@ -29,17 +29,24 @@
     </div>
 
     <div class="section">
-        <h2>Isännän tarkistuslista</h2>
-        <label><input type="checkbox" class="isanta-check" value="Varusteet tarkistettu"> Varusteet tarkistettu</label>
-        <label><input type="checkbox" class="isanta-check" value="Alus merikelpoinen"> Alus merikelpoinen</label>
-        <label><input type="checkbox" class="isanta-check" value="Käyttöopastus annettu"> Käyttöopastus annettu</label>
+        <h2>Isännän tarkistuslista (Turvallisuus ja lainmukaisuus)</h2>
+        <label><input type="checkbox" class="isanta-check" value="Veneen tekninen kunto (moottori, ohjaus, runko) tarkistettu"> Veneen tekninen kunto (moottori, ohjaus, runko)</label>
+        <label><input type="checkbox" class="isanta-check" value="Pelastusliivit (riittävä määrä, tarkastettu)"> Pelastusliivit (riittävä määrä, tarkastettu)</label>
+        <label><input type="checkbox" class="isanta-check" value="Tyhjennysvälineet (äyskäri/pumppu) mukana"> Tyhjennysvälineet (äyskäri/pumppu)</label>
+        <label><input type="checkbox" class="isanta-check" value="Ankkuri ja kiinnitysköydet kunnossa"> Ankkuri ja kiinnitysköydet</label>
+        <label><input type="checkbox" class="isanta-check" value="Viestintävälineet toimintakunnossa"> Viestintävälineet toimintakunnossa</label>
+        <label><input type="checkbox" class="isanta-check" value="Käyttöopastus ja turvallisuusohjeistus annettu"> Käyttöopastus ja turvallisuusohjeistus</label>
+        <label><input type="checkbox" class="isanta-check" value="Sääolosuhteet arvioitu ja todettu turvallisiksi"> Sääolosuhteet arvioitu turvalliseksi</label>
     </div>
 
     <div class="section">
-        <h2>Vieraan tarkistuslista</h2>
-        <label><input type="checkbox" class="vieras-check" value="Uimataito vakuutettu"> Uimataito vakuutettu</label>
-        <label><input type="checkbox" class="vieras-check" value="Pelastusliivit kunnossa"> Pelastusliivit kunnossa</label>
-        <label><input type="checkbox" class="vieras-check" value="Sää tarkistettu"> Sää tarkistettu</label>
+        <h2>Vieraan tarkistuslista (Vastuullisuus ja osaaminen)</h2>
+        <label><input type="checkbox" class="vieras-check" value="Uimataito vakuutettu (200m)"> Vakuutan omaavani riittävän uimataidon (200m)</label>
+        <label><input type="checkbox" class="vieras-check" value="Pelastusliivit puettu oikein"> Vakuutan käyttäväni pelastusliivejä koko matkan</label>
+        <label><input type="checkbox" class="vieras-check" value="Reittisuunnitelma ja paluuaika ilmoitettu"> Reittisuunnitelma ja paluuaika ilmoitettu</label>
+        <label><input type="checkbox" class="vieras-check" value="Puhelin ladattu ja vesitiiviissä suojassa"> Puhelin ladattu ja vesitiiviissä suojassa</label>
+        <label><input type="checkbox" class="vieras-check" value="Päihteettömyys vakuutettu"> Vakuutan olevani täysin päihteettömässä tilassa</label>
+        <label><input type="checkbox" class="vieras-check" value="Ympäristövastuu (roskaton veneily) ymmärretty"> Sitoudun roskaamattomaan veneilyyn</label>
     </div>
 
     <button id="lahetaBtn">Lähetä ja tallenna</button>
