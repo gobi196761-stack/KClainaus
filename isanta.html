@@ -4,53 +4,57 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KClainaus - Lainauslomake</title>
-    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
     <style>
-        body { font-family: sans-serif; padding: 20px; max-width: 600px; margin: 0 auto; background: #f4f7f6; }
+        body { font-family: sans-serif; padding: 20px; max-width: 700px; margin: 0 auto; background: #f4f7f6; }
         .section { background: white; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        h1, h2 { color: #2c3e50; }
-        .input-group { margin-bottom: 15px; }
-        label { display: block; margin: 10px 0; cursor: pointer; padding: 5px; border-bottom: 1px solid #eee; }
-        input[type="text"], input[type="email"] { width: 100%; padding: 12px; margin: 5px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 16px; }
-        button { background: #27ae60; color: white; border: none; padding: 15px; width: 100%; font-size: 1.1em; cursor: pointer; border-radius: 5px; margin-top: 10px; }
-        button:hover { background: #219150; }
+        h1, h2, h3 { color: #2c3e50; }
+        label { display: block; margin: 6px 0; cursor: pointer; padding: 4px; border-bottom: 1px solid #eee; font-size: 0.9em; }
+        input[type="text"], input[type="email"] { width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { background: #27ae60; color: white; border: none; padding: 15px; width: 100%; font-size: 1.2em; cursor: pointer; border-radius: 5px; margin-top: 20px; }
     </style>
 </head>
 <body>
-    <h1>Lainauslomake</h1>
-    
+    <h1>Kajakin lainauslomake</h1>
     <div class="section">
-        <div class="input-group"><input type="text" id="isantaNimi" placeholder="Isännän nimi"></div>
-        <div class="input-group"><input type="email" id="isantaEmail" placeholder="Isännän sähköposti"></div>
-        <div class="input-group"><input type="text" id="vierasNimi" placeholder="Vieraan nimi"></div>
-        <div class="input-group"><input type="email" id="vierasEmail" placeholder="Vieraan sähköposti"></div>
+        <input type="text" id="isantaNimi" placeholder="Lainaaja (omistaja)">
+        <input type="email" id="isantaEmail" placeholder="Lainaajan sähköposti">
+        <input type="text" id="vierasNimi" placeholder="Lainaksi ottaja">
+        <input type="email" id="vierasEmail" placeholder="Lainaksi ottajan sähköposti">
     </div>
 
     <div class="section">
-        <h2>Isännän tarkistuslista (Turvallisuus ja lainmukaisuus)</h2>
-        <label><input type="checkbox" class="isanta-check" value="Veneen tekninen kunto (moottori, ohjaus, runko) tarkistettu"> Veneen tekninen kunto (moottori, ohjaus, runko)</label>
-        <label><input type="checkbox" class="isanta-check" value="Pelastusliivit (riittävä määrä, tarkastettu)"> Pelastusliivit (riittävä määrä, tarkastettu)</label>
-        <label><input type="checkbox" class="isanta-check" value="Tyhjennysvälineet (äyskäri/pumppu) mukana"> Tyhjennysvälineet (äyskäri/pumppu)</label>
-        <label><input type="checkbox" class="isanta-check" value="Ankkuri ja kiinnitysköydet kunnossa"> Ankkuri ja kiinnitysköydet</label>
-        <label><input type="checkbox" class="isanta-check" value="Viestintävälineet toimintakunnossa"> Viestintävälineet toimintakunnossa</label>
-        <label><input type="checkbox" class="isanta-check" value="Käyttöopastus ja turvallisuusohjeistus annettu"> Käyttöopastus ja turvallisuusohjeistus</label>
-        <label><input type="checkbox" class="isanta-check" value="Sääolosuhteet arvioitu ja todettu turvallisiksi"> Sääolosuhteet arvioitu turvalliseksi</label>
+        <h2>1. Lainaaja (Omistaja)</h2>
+        <h3>A. Kunto ja turvallisuus</h3>
+        <label><input type="checkbox" class="isanta-check" value="Kajakki turvallisessa kunnossa"> Kajakki on turvallisessa kunnossa</label>
+        <label><input type="checkbox" class="isanta-check" value="Runko ja saumat tarkistettu"> Runko ja saumat tarkistettu</label>
+        <label><input type="checkbox" class="isanta-check" value="Luukut ja tulpat tarkistettu"> Luukut, tulpat ja vedenpitävyys tarkistettu</label>
+        <label><input type="checkbox" class="isanta-check" value="Istuin ja jalkatuet kunnossa"> Istuin, jalkatuet ja aukkopeite kunnossa</label>
+        <label><input type="checkbox" class="isanta-check" value="Viat kerrottu"> Viat ja puutteet kerrottu</label>
+        <label><input type="checkbox" class="isanta-check" value="Riskit kerrottu"> Turvallisuusriskit kerrottu</label>
+        <h3>B. Varusteet & D. Sopimus</h3>
+        <label><input type="checkbox" class="isanta-check" value="Varusteet luovutettu"> Sovitut varusteet luovutettu</label>
+        <label><input type="checkbox" class="isanta-check" value="Mela ja kellunta kunnossa"> Mela ja kelluntavarusteet tarkistettu</label>
+        <label><input type="checkbox" class="isanta-check" value="Laina-aika sovittu"> Laina-aika, palautus ja käyttöalue sovittu</label>
+        <label><input type="checkbox" class="isanta-check" value="Vakuutusturva käsitelty"> Vakuutusturvan merkitys selvitetty</label>
     </div>
 
     <div class="section">
-        <h2>Vieraan tarkistuslista (Vastuullisuus ja osaaminen)</h2>
-        <label><input type="checkbox" class="vieras-check" value="Uimataito vakuutettu (200m)"> Vakuutan omaavani riittävän uimataidon (200m)</label>
-        <label><input type="checkbox" class="vieras-check" value="Pelastusliivit puettu oikein"> Vakuutan käyttäväni pelastusliivejä koko matkan</label>
-        <label><input type="checkbox" class="vieras-check" value="Reittisuunnitelma ja paluuaika ilmoitettu"> Reittisuunnitelma ja paluuaika ilmoitettu</label>
-        <label><input type="checkbox" class="vieras-check" value="Puhelin ladattu ja vesitiiviissä suojassa"> Puhelin ladattu ja vesitiiviissä suojassa</label>
-        <label><input type="checkbox" class="vieras-check" value="Päihteettömyys vakuutettu"> Vakuutan olevani täysin päihteettömässä tilassa</label>
-        <label><input type="checkbox" class="vieras-check" value="Ympäristövastuu (roskaton veneily) ymmärretty"> Sitoudun roskaamattomaan veneilyyn</label>
+        <h2>2. Lainaksi ottaja</h2>
+        <h3>A. Käyttövalmius</h3>
+        <label><input type="checkbox" class="vieras-check" value="Osaan käyttää turvallisesti"> Osaan käyttää kajakkia turvallisesti</label>
+        <label><input type="checkbox" class="vieras-check" value="Ymmärrän rajani"> Ymmärrän kajakin ominaisuudet ja omat taitorajani</label>
+        <label><input type="checkbox" class="vieras-check" value="Sää arvioitu"> Sää ja reitti arvioitu</label>
+        <label><input type="checkbox" class="vieras-check" value="Säännöt tiedossa"> Vesiliikennesäännöt tiedossa</label>
+        <h3>B. Varusteet & Retki</h3>
+        <label><input type="checkbox" class="vieras-check" value="Varusteet tarkistettu"> Kajakki ja varusteet tarkistettu</label>
+        <label><input type="checkbox" class="vieras-check" value="Reitti ja hälytys"> Reitti, kesto ja apu-suunnitelma selvillä</label>
+        <label><input type="checkbox" class="vieras-check" value="Käsittely ja palautus"> Käytän huolellisesti ja palautan sovittuun kuntoon</label>
+        <label><input type="checkbox" class="vieras-check" value="Vastuun ymmärrys"> Ymmärrän vastuut ja vakuutusehdot</label>
     </div>
 
-    <button id="lahetaBtn">Lähetä ja tallenna</button>
-
+    <button id="lahetaBtn">Lähetä vahvistus</button>
     <script src="app.js"></script>
 </body>
 </html>
