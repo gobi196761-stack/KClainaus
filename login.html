@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <title>Kirjaudu KClainaukseen</title>
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function(){
+            emailjs.init("DnLC7GQCglOezkCfw"); // MUUTA TÄMÄ
+        })();
+    </script>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; padding-top: 50px; background: #f4f7f6; }
+        .box { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); width: 300px; }
+        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background: #27ae60; color: white; border: none; cursor: pointer; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2>Kirjaudu sisään</h2>
+        <input type="email" id="email" placeholder="Sähköpostiosoite">
+        <button onclick="sendCode()">Lähetä koodi</button>
+        <div id="codeArea" style="display:none; margin-top:20px;">
+            <input type="text" id="code" placeholder="Syötä koodi">
+            <button onclick="verifyCode()">Vahvista</button>
+        </div>
+    </div>
+    <script src="auth.js"></script>
+</body>
+</html>
