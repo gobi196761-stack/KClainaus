@@ -9,9 +9,13 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
-emailjs.init("DnLC7GQCglOezkCfw");
 
 document.getElementById('lahetaBtn').onclick = async function() {
+    if (typeof emailjs === 'undefined') {
+        alert('Sivu latautuu vielä, odota hetki...');
+        return;
+    }
+
     const data = {
         isantaNimi: document.getElementById('isantaNimi').value,
         isantaEmail: document.getElementById('isantaEmail').value,
@@ -19,6 +23,7 @@ document.getElementById('lahetaBtn').onclick = async function() {
         vierasEmail: document.getElementById('vierasEmail').value,
         isantaCheck: Array.from(document.querySelectorAll('.isanta-check:checked')).map(c => c.value).join(', '),
         vierasCheck: Array.from(document.querySelectorAll('.vieras-check:checked')).map(c => c.value).join(', '),
+        yhteinenCheck: Array.from(document.querySelectorAll('.yhteinen-check:checked')).map(c => c.value).join(', '),
         pvm: new Date().toISOString().split('T')[0]
     };
 
@@ -29,8 +34,17 @@ document.getElementById('lahetaBtn').onclick = async function() {
 
     try {
         await firebase.database().ref('Lainaukset/' + data.pvm).push(data);
-        await emailjs.send('service_wf86l3j', 'template_c08r5lr', { ...data, to_email: data.isantaEmail, reply_to: 'gobi196761@gmail.com' });
-        await emailjs.send('service_wf86l3j', 'template_c08r5lr', { ...data, to_email: data.vierasEmail, reply_to: 'gobi196761@gmail.com' });
+        
+        // Lähetetään sähköpostit käyttäen oikeaa templatea
+        await emailjs.send('service_wf86l3j', 'template_c08r5lr', { 
+            ...data, 
+            to_email: data.isantaEmail 
+        });
+        await emailjs.send('service_wf86l3j', 'template_c08r5lr', { 
+            ...data, 
+            to_email: data.vierasEmail 
+        });
+        
         alert('Tallennus ja sähköpostit lähetetty!');
     } catch (e) {
         alert('Virhe: ' + e.message);
