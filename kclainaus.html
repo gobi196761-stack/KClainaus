@@ -17,74 +17,185 @@
         })();
     </script>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; padding: 10px; max-width: 100%; margin: 0 auto; background: #f4f7f6; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; padding: 10px 10px 90px; max-width: 720px; margin: 0 auto; background: #f4f7f6; color: #2c3e50; line-height: 1.4; }
         .section { background: white; padding: 15px; margin-bottom: 15px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        h1 { font-size: 1.5em; color: #2c3e50; text-align: center; }
-        h2 { font-size: 1.2em; color: #2c3e50; margin-top: 0; }
-        h3 { font-size: 1.0em; color: #34495e; margin-top: 15px; margin-bottom: 10px; }
-        label { display: flex; align-items: center; padding: 12px; border-bottom: 1px solid #eee; font-size: 0.95em; cursor: pointer; }
-        input[type="checkbox"] { width: 22px; height: 22px; margin-right: 15px; flex-shrink: 0; }
-        input[type="text"], input[type="email"] { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 16px; }
+        h1 { font-size: 1.5em; text-align: center; }
+        h2 { font-size: 1.2em; margin-top: 0; }
+        h3 { font-size: 1.0em; color: #34495e; margin: 18px 0 4px; }
+        .ohje { font-size: 0.85em; color: #6b7b8a; margin: 0 0 8px; }
+        label.tarkistus { display: flex; align-items: flex-start; padding: 12px 4px; border-bottom: 1px solid #eee; font-size: 0.95em; cursor: pointer; }
+        label.tarkistus input { margin-top: 1px; }
+        .kentta { display: block; font-size: 0.9em; font-weight: 600; margin-top: 10px; }
+        input[type="checkbox"] { width: 22px; height: 22px; margin: 0 14px 0 0; flex-shrink: 0; accent-color: #27ae60; }
+        input[type="text"], input[type="email"], input[type="datetime-local"], select, textarea {
+            width: 100%; padding: 12px; margin: 6px 0; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box;
+            font-size: 16px; font-family: inherit; background: white; color: inherit; }
+        textarea { min-height: 70px; resize: vertical; }
         input[readonly] { background: #eef1f3; color: #555; border-style: dashed; cursor: not-allowed; }
-        .lukittu { font-size: 0.8em; color: #7f8c8d; margin: -4px 0 8px; }
-        button { background: #27ae60; color: white; border: none; padding: 18px; width: 100%; font-size: 1.2em; cursor: pointer; border-radius: 8px; margin-top: 10px; }
+        .lukittu { font-size: 0.8em; color: #7f8c8d; margin: -2px 0 8px; }
+        .rivi { display: grid; grid-template-columns: 1fr; gap: 0 12px; }
+        @media (min-width: 560px) { .rivi { grid-template-columns: 1fr 1fr; } }
+        .varusteet { display: grid; grid-template-columns: 1fr 1fr; gap: 0 8px; }
+        .varusteet label { display: flex; align-items: center; padding: 10px 2px; font-size: 0.95em; cursor: pointer; }
+        details { margin: 4px 0 4px 36px; font-size: 0.88em; color: #445; }
+        summary { cursor: pointer; color: #2471a3; padding: 4px 0; }
+        details ul { margin: 6px 0 4px; padding-left: 18px; }
+        details li { margin-bottom: 6px; }
+        .ehdollinen[hidden] { display: none; }
+        .puuttuu { background: #fdf2e9; }
+        .alapalkki { position: fixed; left: 0; right: 0; bottom: 0; background: rgba(244,247,246,0.97); padding: 8px 10px calc(8px + env(safe-area-inset-bottom)); box-shadow: 0 -1px 4px rgba(0,0,0,0.1); }
+        .alapalkki > div { max-width: 720px; margin: 0 auto; }
+        #edistyminen { font-size: 0.85em; text-align: center; color: #6b7b8a; margin-bottom: 4px; }
+        button { background: #27ae60; color: white; border: none; padding: 16px; width: 100%; font-size: 1.15em; cursor: pointer; border-radius: 8px; }
+        button:disabled { background: #95a5a6; }
     </style>
 </head>
 <body>
     <h1>Kajakin lainauslomake</h1>
-    
+
     <div class="section">
-        <input type="text" id="isantaNimi" placeholder="Lainaaja (omistaja)">
+        <h2>Osapuolet</h2>
+        <label class="kentta" for="isantaNimi">Lainaaja (kajakin omistaja tai haltija)</label>
+        <input type="text" id="isantaNimi" autocomplete="name" placeholder="Etu- ja sukunimi">
         <input type="email" id="isantaEmail" readonly tabindex="-1" aria-label="Lainaajan sähköposti">
-        <div class="lukittu">🔒 Lainaajan sähköposti – vahvistettu kirjautumisessa</div>
-        <input type="text" id="vierasNimi" placeholder="Lainaksi ottaja">
+        <div class="lukittu">🔒 Vahvistettu kirjautumisessa</div>
+        <label class="kentta" for="vierasNimi">Lainaksi ottaja</label>
+        <input type="text" id="vierasNimi" placeholder="Etu- ja sukunimi">
         <input type="email" id="vierasEmail" readonly tabindex="-1" aria-label="Lainaksi ottajan sähköposti">
-        <div class="lukittu">🔒 Lainaksi ottajan sähköposti – vahvistettu kirjautumisessa</div>
+        <div class="lukittu">🔒 Vahvistettu kirjautumisessa</div>
     </div>
 
     <div class="section">
-        <h2>1. Lainaaja (Omistaja)</h2>
-        <h3>A. Kunto ja turvallisuus</h3>
-        <label><input type="checkbox" class="isanta-check" value="Kajakki turvallisessa kunnossa"> Kajakki on turvallisessa kunnossa</label>
-        <label><input type="checkbox" class="isanta-check" value="Runko ja saumat tarkistettu"> Runko ja saumat tarkistettu</label>
-        <label><input type="checkbox" class="isanta-check" value="Luukut ja tulpat tarkistettu"> Luukut, tulpat ja vedenpitävyys tarkistettu</label>
-        <label><input type="checkbox" class="isanta-check" value="Istuin ja jalkatuet kunnossa"> Istuin, jalkatuet ja aukkopeite kunnossa</label>
-        <label><input type="checkbox" class="isanta-check" value="Viat kerrottu"> Viat ja puutteet kerrottu</label>
-        <label><input type="checkbox" class="isanta-check" value="Riskit kerrottu"> Turvallisuusriskit kerrottu</label>
-        <h3>B. Varusteet & D. Sopimus</h3>
-        <label><input type="checkbox" class="isanta-check" value="Varusteet luovutettu"> Sovitut varusteet luovutettu</label>
-        <label><input type="checkbox" class="isanta-check" value="Mela ja kellunta kunnossa"> Mela ja kelluntavarusteet tarkistettu</label>
-        <label><input type="checkbox" class="isanta-check" value="Laina-aika sovittu"> Laina-aika, palautus ja käyttöalue sovittu</label>
-        <label><input type="checkbox" class="isanta-check" value="Vakuutusturva käsitelty"> Vakuutusturvan merkitys selvitetty</label>
+        <h2>Retki ja kalusto</h2>
+        <label class="kentta" for="tyyppi">Retken tyyppi</label>
+        <select id="tyyppi">
+            <option value="">Valitse…</option>
+            <option value="jarvi">Retkimelonta – järvi</option>
+            <option value="joki">Retkimelonta – joki (ei koskia)</option>
+            <option value="meri">Retkimelonta – meri tai saaristo</option>
+            <option value="koski">Koskimelonta</option>
+        </select>
+        <label class="kentta" for="kohde">Kohde ja reitti</label>
+        <textarea id="kohde" maxlength="300" placeholder="Esim. Kiiminkijoki, Koiteli – Haukipudas, yöpyminen Jokelan laavulla"></textarea>
+        <div class="rivi">
+            <div>
+                <label class="kentta" for="alku">Lainan alku</label>
+                <input type="datetime-local" id="alku">
+            </div>
+            <div>
+                <label class="kentta" for="palautus">Palautus viimeistään</label>
+                <input type="datetime-local" id="palautus">
+            </div>
+        </div>
+        <label class="kentta" for="kajakki">Lainattava kajakki</label>
+        <input type="text" id="kajakki" maxlength="120" placeholder="Malli, väri tai tunniste">
+        <span class="kentta">Mukaan lähtevät varusteet</span>
+        <div class="varusteet">
+            <label><input type="checkbox" class="varuste" value="Mela"> Mela</label>
+            <label><input type="checkbox" class="varuste" value="Varamela"> Varamela</label>
+            <label><input type="checkbox" class="varuste" value="Kelluntaliivi"> Kelluntaliivi</label>
+            <label><input type="checkbox" class="varuste" value="Aukkopeite"> Aukkopeite</label>
+            <label><input type="checkbox" class="varuste" value="Pumppu"> Pumppu</label>
+            <label><input type="checkbox" class="varuste" value="Kypärä"> Kypärä</label>
+            <label><input type="checkbox" class="varuste" value="Heittoköysi"> Heittoköysi</label>
+            <label><input type="checkbox" class="varuste" value="Hinausköysi"> Hinausköysi</label>
+            <label><input type="checkbox" class="varuste" value="Kuivapussit"> Kuivapussit</label>
+            <label><input type="checkbox" class="varuste" value="Kuljetustelineet tai -kärry"> Kuljetusteline / kärry</label>
+        </div>
+        <input type="text" id="muutVarusteet" maxlength="200" placeholder="Muut varusteet (valinnainen)">
+    </div>
+
+    <div class="section">
+        <h2>1. Lainaaja (omistaja)</h2>
+        <p class="ohje">Lainaaja vakuuttaa tarkistaneensa kajakin ja kertoneensa siitä olennaisen.</p>
+        <h3>Kajakin kunto</h3>
+        <label class="tarkistus"><input type="checkbox" class="isanta-check" value="Runko ehjä"> Rungossa ei ole halkeamia, reikiä tai korjaamattomia vaurioita</label>
+        <label class="tarkistus"><input type="checkbox" class="isanta-check" value="Kelluvuus varmistettu"> Luukut ja tulpat pitävät vettä ja laipiot ovat ehjät, joten kajakki kelluu myös kaatuneena</label>
+        <label class="tarkistus"><input type="checkbox" class="isanta-check" value="Säädöt ja ohjaus toimivat"> Istuin, jalkatuet sekä peräsin tai skegi naruineen toimivat</label>
+        <label class="tarkistus"><input type="checkbox" class="isanta-check" value="Kansiköydet ja kahvat kunnossa"> Kansiköydet ja kantokahvat ovat ehjät ja kiinni</label>
+        <label class="tarkistus"><input type="checkbox" class="isanta-check" value="Viat kerrottu"> Olen kertonut kaikki tuntemani viat ja puutteet</label>
+        <h3>Luovutus</h3>
+        <label class="tarkistus"><input type="checkbox" class="isanta-check" value="Varusteet tarkistettu ja luovutettu"> Yllä merkityt varusteet on tarkistettu ja luovutettu, ja kelluntaliivi on lainaksi ottajalle sopivan kokoinen</label>
+        <label class="tarkistus"><input type="checkbox" class="isanta-check" value="Säädöt näytetty"> Olen näyttänyt kajakin säädöt sekä peräsimen tai skegin käytön</label>
+        <label class="tarkistus"><input type="checkbox" class="isanta-check" value="Ominaisuudet ja riskit kerrottu"> Olen kertonut kajakin ominaisuuksista ja riskeistä: vakaus, tuuliherkkyys ja sopivuus valitulle retkelle</label>
     </div>
 
     <div class="section">
         <h2>2. Lainaksi ottaja</h2>
-        <h3>A. Käyttövalmius</h3>
-        <label><input type="checkbox" class="vieras-check" value="Osaan käyttää turvallisesti"> Osaan käyttää kajakkia turvallisesti</label>
-        <label><input type="checkbox" class="vieras-check" value="Ymmärrän rajani"> Ymmärrän kajakin ominaisuudet ja omat taitorajani</label>
-        <label><input type="checkbox" class="vieras-check" value="Sää arvioitu"> Sää ja reitti arvioitu</label>
-        <label><input type="checkbox" class="vieras-check" value="Säännöt tiedossa"> Vesiliikennesäännöt tiedossa</label>
-        <h3>B. Varusteet & Retki</h3>
-        <label><input type="checkbox" class="vieras-check" value="Varusteet tarkistettu"> Kajakki ja varusteet tarkistettu</label>
-        <label><input type="checkbox" class="vieras-check" value="Reitti ja hälytys"> Reitti, kesto ja apu-suunnitelma selvillä</label>
-        <label><input type="checkbox" class="vieras-check" value="Käsittely ja palautus"> Käytän huolellisesti ja palautan sovittuun kuntoon</label>
-        <label><input type="checkbox" class="vieras-check" value="Vastuun ymmärrys"> Ymmärrän vastuut ja vakuutusehdot</label>
+        <p class="ohje">Lainaksi ottaja vakuuttaa, että seuraavat asiat pitävät paikkansa.</p>
+        <h3>Taidot</h3>
+        <label class="tarkistus"><input type="checkbox" class="vieras-check" value="Osaa meloa tämän tyyppisellä kajakilla"> Osaan meloa ja ohjata tämäntyyppistä kajakkia</label>
+        <label class="tarkistus"><input type="checkbox" class="vieras-check" value="Pelastautumistaito"> Osaan toimia kaatuessa: pääsen irti kajakista ja tiedän, miten palaan kajakkiin tai uin rantaan</label>
+        <label class="tarkistus"><input type="checkbox" class="vieras-check" value="Uimataito"> Pystyn uimaan vähintään 25 metriä melontavarusteissa</label>
+        <label class="tarkistus"><input type="checkbox" class="vieras-check" value="Tunnen taitorajani"> Tunnen taitorajani, ja muutan suunnitelmaa tai jätän lähtemättä, jos olosuhteet ylittävät ne</label>
+
+        <h3>Turvallisuus retkellä</h3>
+        <label class="tarkistus"><input type="checkbox" class="vieras-check" value="Kelluntaliivi aina päällä"> Pidän kelluntaliivin päällä ja kiinni koko melonnan ajan</label>
+        <label class="tarkistus"><input type="checkbox" class="vieras-check" value="Kylmä vesi huomioitu"> Pukeudun veden lämpötilan mukaan</label>
+        <details><summary>Miksi?</summary><ul>
+            <li>Alle 15-asteisessa vedessä kylmäshokki voi aiheuttaa hallitsemattoman haukkomisen ja hukkumisvaaran heti veteen joutuessa.</li>
+            <li>Lihasvoima ja uintikyky heikkenevät jo 10–15 minuutissa, joten kajakkiin palaaminen vaikeutuu nopeasti.</li>
+            <li>Kylmällä vedellä kuiva- tai märkäpuku, villa- tai tekniset aluskerrokset ja vaihtovaatteet vedenpitävässä pussissa. Ei puuvillaa.</li>
+        </ul></details>
+        <label class="tarkistus"><input type="checkbox" class="vieras-check" value="Sää tarkistettu"> Tarkistan sää- ja tuuliennusteen ennen lähtöä ja seuraan säätä retken aikana</label>
+        <label class="tarkistus"><input type="checkbox" class="vieras-check" value="Reitti ja paluuaika ilmoitettu"> Kerron reitin ja arvioidun paluuajan jollekulle maissa ja ilmoitan, kun olen palannut</label>
+        <label class="tarkistus"><input type="checkbox" class="vieras-check" value="Puhelin mukana"> Mukana on vesitiiviisti pakattu, ladattu puhelin. Hätätilanteessa soitan 112.</label>
+        <label class="tarkistus"><input type="checkbox" class="vieras-check" value="Ei päihteitä"> En melo päihtyneenä</label>
+
+        <div class="ehdollinen" data-tyyppi="meri" hidden>
+            <h3>Meri ja saaristo</h3>
+            <label class="tarkistus"><input type="checkbox" class="vieras-check" value="Meri: reitti suojaisia rantoja pitkin"> Reitti kulkee suojaisia rantoja pitkin, ja avoselkien ylitykset on minimoitu</label>
+            <label class="tarkistus"><input type="checkbox" class="vieras-check" value="Meri: merisää ja aallokko"> Seuraan Ilmatieteen laitoksen merisäätä ja ymmärrän, että tuuli ja aallokko voivat yltyä nopeasti</label>
+            <label class="tarkistus"><input type="checkbox" class="vieras-check" value="Meri: kartta ja pumppu"> Mukana on kartta tai merikarttasovellus sekä pumppu</label>
+        </div>
+
+        <div class="ehdollinen" data-tyyppi="koski" hidden>
+            <h3>Koskimelonta</h3>
+            <label class="tarkistus"><input type="checkbox" class="vieras-check" value="Koski: kypärä, liivi ja heittoköysi"> Käytän kypärää ja kelluntaliiviä, ja ryhmällä on heittoköysi</label>
+            <label class="tarkistus"><input type="checkbox" class="vieras-check" value="Koski: ei yksin"> En melo koskessa yksin. Ryhmässä on ainakin yksi pelastustaitoinen meloja.</label>
+            <label class="tarkistus"><input type="checkbox" class="vieras-check" value="Koski: luokitus ja tarkastus"> Tunnen kosken luokituksen ja nykyisen vesitilanteen, ja tarkastan vaikeat kohdat maalta ennen laskua</label>
+            <label class="tarkistus"><input type="checkbox" class="vieras-check" value="Koski: toiminta uidessa"> Osaan toimia uidessa koskessa</label>
+            <details><summary>Muistilista</summary><ul>
+                <li>Ui selällään jalat edellä ja pinnassa. Älä yritä seistä virtaavassa vedessä, sillä jalka voi jäädä kiviin kiinni.</li>
+                <li>Pysy kaatuneen kajakin vastavirran puolella, ettei se puristu sinua kiveä vasten.</li>
+                <li>Vältä puunrunkoja ja siivilöitä, eli paikkoja, joista vesi virtaa läpi mutta ihminen ei pääse.</li>
+            </ul></details>
+        </div>
+
+        <h3>Vesillä liikkumisen säännöt</h3>
+        <label class="tarkistus"><input type="checkbox" class="vieras-check" value="Vesiliikennesäännöt ja jokamiehenoikeudet"> Tunnen ja noudatan vesiliikenteen sääntöjä ja jokamiehenoikeuksia</label>
+        <details><summary>Tärkeimmät säännöt</summary><ul>
+            <li><b>Kajakki ei näy.</b> Suuret alukset ja moottoriveneet eivät välttämättä huomaa kajakkia, joten väistä aina ajoissa ja selvästi.</li>
+            <li><b>Kulkuväylät:</b> pieni alus ei saa haitata alusta, joka voi kulkea turvallisesti vain väylällä. Ylitä väylä kohtisuoraan, ryhmänä ja ripeästi, äläkä pysähdy väylälle.</li>
+            <li><b>Kapeat salmet ja jokiuomat:</b> pysy oikeassa reunassa.</li>
+            <li><b>Pimeä ja huono näkyvyys:</b> pidä mukana valkoista valoa näyttävä lamppu ja näytä se ajoissa, jotta muut ehtivät väistää.</li>
+            <li><b>Huolellisuus:</b> vesillä liikkuva ei saa aiheuttaa vaaraa tai haittaa muille. Päihtyneenä ei liikuta vesillä.</li>
+            <li><b>Rajoitukset:</b> noudata luonnonsuojelualueiden liikkumis- ja maihinnousukieltoja. Lintuluodoille ei nousta pesimäaikaan.</li>
+            <li><b>Jokamiehenoikeudet:</b> tilapäinen maihinnousu ja yöpyminen ovat sallittuja riittävän kaukana pihapiireistä. Avotulen teko vaatii maanomistajan luvan, ja metsäpalovaroituksen aikana se on kielletty. Käytä merkittyjä tulipaikkoja.</li>
+            <li><b>Roskat:</b> vie kaikki roskat pois, ja jätä leiri- ja taukopaikat siistimmiksi kuin ne olivat.</li>
+        </ul></details>
+
+        <h3>Lainaehdot</h3>
+        <label class="tarkistus"><input type="checkbox" class="vieras-check" value="Huolellinen käsittely"> Käsittelen kajakkia huolellisesti: en raahaa sitä kivikossa, ja kiinnitän sen kuljetuksessa kunnolla</label>
+        <label class="tarkistus"><input type="checkbox" class="vieras-check" value="Palautus sovitusti"> Palautan kajakin ja varusteet sovittuun aikaan ja paikkaan, huuhdeltuina ja kuivattuina</label>
+        <label class="tarkistus"><input type="checkbox" class="vieras-check" value="Vahingoista ilmoitus"> Ilmoitan vahingoista, puutteista ja myöhästymisestä heti lainaajalle</label>
+        <label class="tarkistus"><input type="checkbox" class="vieras-check" value="Oma vastuu ja vakuutus"> Melon omalla vastuullani ja olen tarkistanut oman vakuutusturvani (tapaturma- ja vastuuvakuutus)</label>
     </div>
 
     <div class="section">
-        <h2>3. Yhteiset tarkistukset</h2>
-        <label><input type="checkbox" class="yhteinen-check" value="Tiedot ja aika käyty läpi"> Kajakin tiedot ja laina-aika käyty läpi</label>
-        <label><input type="checkbox" class="yhteinen-check" value="Kunto ja puutteet yhdessä"> Kajakin kunto ja puutteet käyty läpi yhdessä</label>
-        <label><input type="checkbox" class="yhteinen-check" value="Varusteet käyty läpi"> Kaikki mukaan tulevat varusteet käyty läpi</label>
-        <label><input type="checkbox" class="yhteinen-check" value="Käyttötarkoitus ja alue sovittu"> Käyttötarkoitus ja sallittu alue sovittu</label>
-        <label><input type="checkbox" class="yhteinen-check" value="Palautus sovittu"> Palautusaika ja -paikka sovittu</label>
-        <label><input type="checkbox" class="yhteinen-check" value="Vahingoista ilmoittaminen sovittu"> Vahingoista ilmoittaminen sovittu</label>
-        <label><input type="checkbox" class="yhteinen-check" value="Vakuutusturva käsitelty"> Vakuutusturva käsitelty ja ymmärretty</label>
-        <label><input type="checkbox" class="yhteinen-check" value="Vastuut ja kysymykset"> Vastuukysymykset käyty läpi, mahdollisuus kysyä annettu</label>
+        <h2>3. Yhdessä sovittu</h2>
+        <label class="tarkistus"><input type="checkbox" class="yhteinen-check" value="Retki sopii kajakille ja taidoille"> Retken kohde, ajankohta ja tyyppi sopivat sekä kajakille että lainaksi ottajan taidoille</label>
+        <label class="tarkistus"><input type="checkbox" class="yhteinen-check" value="Kunto katsottu yhdessä"> Kajakin kunto ja mahdolliset jäljet tai vauriot on katsottu yhdessä ennen luovutusta</label>
+        <label class="tarkistus"><input type="checkbox" class="yhteinen-check" value="Varusteet käyty läpi"> Mukaan lähtevät varusteet on käyty läpi lomakkeen listan mukaan</label>
+        <label class="tarkistus"><input type="checkbox" class="yhteinen-check" value="Palautus ja kunto sovittu"> Palautusaika, -paikka ja palautuskunto on sovittu</label>
+        <label class="tarkistus"><input type="checkbox" class="yhteinen-check" value="Vahinkojen käsittely sovittu"> On sovittu, miten vahingot korvataan ja miten myöhästymisestä ilmoitetaan</label>
+        <label class="tarkistus"><input type="checkbox" class="yhteinen-check" value="Kysymyksiin vastattu"> Molemmilla on ollut mahdollisuus kysyä, ja kysymyksiin on vastattu</label>
     </div>
 
-    <button id="lahetaBtn">Lähetä vahvistus</button>
-    <script src="app.js?v=3"></script>
+    <div class="alapalkki"><div>
+        <div id="edistyminen"></div>
+        <button id="lahetaBtn">Lähetä vahvistus</button>
+    </div></div>
+    <script src="app.js?v=4"></script>
 </body>
 </html>
