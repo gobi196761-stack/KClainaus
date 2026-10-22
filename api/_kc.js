@@ -70,7 +70,10 @@ async function lahetaEmail(template, parametrit) {
 }
 
 // Firebase Realtime Database REST palvelutilin OAuth-tunnuksella (ei riippuvuuksia).
+let tunnusMuisti = null;   // { tunnus, vanhenee } – säilyy saman funktio-instanssin kutsujen välillä
+
 async function firebaseTunnus() {
+    if (tunnusMuisti && tunnusMuisti.vanhenee > Date.now()) return tunnusMuisti.tunnus;
     const tili = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT || 'null');
     if (!tili) throw new Error('FIREBASE_SERVICE_ACCOUNT puuttuu');
     const nyt = Math.floor(Date.now() / 1000);
@@ -89,16 +92,40 @@ async function firebaseTunnus() {
         }),
     });
     if (!vastaus.ok) throw new Error(`Google OAuth ${vastaus.status}`);
-    return (await vastaus.json()).access_token;
+    const tunnus = (await vastaus.json()).access_token;
+    tunnusMuisti = { tunnus, vanhenee: Date.now() + 50 * 60 * 1000 };
+    return tunnus;
 }
 
-async function firebaseLisaa(polku, data) {
+async function firebase(metodi, polku, data) {
     const vastaus = await fetch(`${DATABASE_URL}/${polku}.json`, {
-        method: 'POST',
+        method: metodi,
         headers: { Authorization: `Bearer ${await firebaseTunnus()}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        body: data === undefined ? undefined : JSON.stringify(data),
     });
     if (!vastaus.ok) throw new Error(`Firebase ${vastaus.status}: ${await vastaus.text()}`);
+    return vastaus.json();
+}
+
+const firebaseLisaa = (polku, data) => firebase('POST', polku, data);
+
+// Pyyntörajat: Firebaseen tallennetaan avaimen (sähköpostin tai IP:n avaimellinen tiiviste, ei
+// itse osoitetta) viimeisen tunnin pyyntöjen aikaleimat. Palauttaa false, jos raja on täynnä.
+const RAJA_IKKUNA_MS = 60 * 60 * 1000;
+
+async function mahtuuRajaan(laji, arvo, max) {
+    const avain = crypto.createHmac('sha256', salaisuus()).update(`${laji}:${arvo}`).digest('hex').slice(0, 32);
+    const polku = `Rajoitukset/${laji}/${avain}`;
+    const nyt = Date.now();
+    const aiemmat = ((await firebase('GET', polku)) || []).filter((t) => t > nyt - RAJA_IKKUNA_MS);
+    if (aiemmat.length >= max) return false;
+    await firebase('PUT', polku, [...aiemmat, nyt]);
+    return true;
+}
+
+function asiakkaanIp(req) {
+    const valitetty = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim();
+    return valitetty || req.socket?.remoteAddress || 'tuntematon';
 }
 
 function vastaa(res, tila, data) {
@@ -113,7 +140,7 @@ const kasittelija = (fn) => async (req, res) => {
     if (req.method !== 'POST') return vastaa(res, 405, { virhe: 'Vain POST' });
     try {
         const runko = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
-        await fn(runko, res);
+        await fn(runko, res, req);
     } catch (e) {
         console.error(e);
         vastaa(res, 500, { virhe: 'Palvelinvirhe, yritä hetken päästä uudelleen' });
@@ -122,5 +149,5 @@ const kasittelija = (fn) => async (req, res) => {
 
 module.exports = {
     KOODI_TEMPLATE, VAHVISTUS_TEMPLATE, allekirjoita, tarkista, koodinTiiviste, samaKoodi, uusiKoodi,
-    normalisoiEmail, kelpoEmail, lahetaEmail, firebaseLisaa, vastaa, kasittelija,
+    normalisoiEmail, kelpoEmail, lahetaEmail, firebaseLisaa, mahtuuRajaan, asiakkaanIp, vastaa, kasittelija,
 };
