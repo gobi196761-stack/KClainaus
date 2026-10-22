@@ -1,1 +1,44 @@
-let code1 = "", code2 = ""; async function sendCodes() { const e1 = document.getElementById("email1").value; const e2 = document.getElementById("email2").value; if (!e1 || !e2) return alert("T‰yt‰ molemmat s‰hkˆpostit"); code1 = Math.floor(100000 + Math.random() * 900000).toString(); code2 = Math.floor(100000 + Math.random() * 900000).toString(); try { await Promise.all([ emailjs.send("service_wf86l3j", "template_7moek5d", { to_email: e1, koodi: code1 }), emailjs.send("service_wf86l3j", "template_7moek5d", { to_email: e2, koodi: code2 }) ]); document.getElementById("codeArea").style.display = "block"; alert("Koodit l‰hetetty molemmille!"); } catch(err) { alert("Virhe: " + JSON.stringify(err)); } } function verifyCodes() { const u1 = document.getElementById("code1").value; const u2 = document.getElementById("code2").value; if (u1 === code1 && u2 === code2) { sessionStorage.setItem("authenticated", "true"); window.location.href = "kclainaus.html"; } else { alert("Virheelliset koodit!"); } }
+// Kahden hengen vahvistus: koodit luodaan ja tarkistetaan palvelimella (api/), selain saa vain
+// allekirjoitetun haasteen ja lopuksi istunnon.
+let haaste = null;
+
+async function postaa(polku, runko) {
+    const vastaus = await fetch(polku, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(runko),
+    });
+    const data = await vastaus.json().catch(() => ({}));
+    if (!vastaus.ok) throw new Error(data.virhe || `Virhe ${vastaus.status}`);
+    return data;
+}
+
+async function sendCodes() {
+    const isantaEmail = document.getElementById('email1').value.trim();
+    const vierasEmail = document.getElementById('email2').value.trim();
+    if (!isantaEmail || !vierasEmail) return alert('T√§yt√§ molemmat s√§hk√∂postit');
+    const nappi = document.getElementById('lahetaKoodit');
+    nappi.disabled = true;
+    try {
+        haaste = (await postaa('/api/laheta-koodit', { isantaEmail, vierasEmail })).haaste;
+        document.getElementById('codeArea').style.display = 'block';
+        alert('Koodit l√§hetetty molemmille!');
+    } catch (e) {
+        alert(e.message);
+    } finally {
+        nappi.disabled = false;
+    }
+}
+
+async function verifyCodes() {
+    if (!haaste) return alert('L√§het√§ ensin koodit');
+    try {
+        const tulos = await postaa('/api/vahvista', {
+            haaste,
+            koodi1: document.getElementById('code1').value,
+            koodi2: document.getElementById('code2').value,
+        });
+        sessionStorage.setItem('kc_istunto', JSON.stringify(tulos));
+        window.location.href = 'kclainaus.html';
+    } catch (e) {
+        alert(e.message);
+    }
+}
